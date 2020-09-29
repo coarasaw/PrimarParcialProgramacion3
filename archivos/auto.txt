@@ -1,0 +1,1 @@
+[{"patente":"aaa123","fecha_ingreso":"admin@mail.com","email":"Wednesday 30th of September 2020 12:52:03 AM"},{"patente":"aaa123","fecha_ingreso":"","email":"","horario":"menos de 4 horas ","fecha_egreso":"Wednesday 30th of September 2020 01:31:38 AM","importe":"300"}]

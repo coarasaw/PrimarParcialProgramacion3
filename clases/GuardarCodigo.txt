@@ -1,0 +1,213 @@
+ case '/login':
+            switch ($method) {
+                case 'POST': //Parametros por el body del usuario
+                    $correo = $_POST['correo']?? '';
+                    $clave = $_POST['clave']?? '';
+                    //$tipo = $_POST['tipo']?? '';   //(admin, user) solo esos valores
+        
+                    $response = new Response();
+        
+                    if (isset($correo) && isset($clave)) {
+                        //$datos = new User($correo, $clave);
+    
+                        //Json
+                        //Verificar si existe usuario y clave son correctas
+                        $bandera=false;            
+                        $arrayJason=Datos::leerJSON($fileUsuario);
+                        
+                        if ($arrayJason != null) {
+                            foreach ($arrayJason as $value) {
+                                if($value->correo==$correo && $value->clave==$clave){
+                                    $bandera=true;
+                                }
+                            }
+                        }            
+                        
+                        if ($bandera == true) {
+                            $rtaJason = Token::generoToken($correo,$clave);
+                            $response->data = $rtaJason;
+                        }else{
+                            $response->status = "No coincide las credenciales";
+                            $response->data = "Usuario o Clave";                       
+                        }
+                        echo json_encode($response);                
+                    }
+                    else{
+                        $response->data = 'Faltan datos para Login (Token)'; //se usa en el lugar que hubo una falla
+                        $response->status = 'fail';       // falla
+                        echo json_encode($response);
+                    } 
+                break;      
+            }
+            case '/login':
+            switch ($method) {
+                case 'POST': //Parametros por el body del usuario
+                    $correo = $_POST['correo']?? '';
+                    $clave = $_POST['clave']?? '';
+                    //$tipo = $_POST['tipo']?? '';   //(admin, user) solo esos valores
+        
+                    $response = new Response();
+        
+                    if (isset($correo) && isset($clave)) {
+                        //$datos = new User($correo, $clave);
+    
+                        //Json
+                        //Verificar si existe usuario y clave son correctas
+                        $bandera=false;            
+                        $arrayJason=Datos::leerJSON($fileUsuario);
+                        
+                        if ($arrayJason != null) {
+                            foreach ($arrayJason as $value) {
+                                if($value->correo==$correo && $value->clave==$clave){
+                                    $bandera=true;
+                                }
+                            }
+                        }            
+                        
+                        if ($bandera == true) {
+                            $rtaJason = Token::generoToken($correo,$clave);
+                            $response->data = $rtaJason;
+                        }else{
+                            $response->status = "No coincide las credenciales";
+                            $response->data = "Usuario o Clave";                       
+                        }
+                        echo json_encode($response);                
+                    }
+                    else{
+                        $response->data = 'Faltan datos para Login (Token)'; //se usa en el lugar que hubo una falla
+                        $response->status = 'fail';       // falla
+                        echo json_encode($response);
+                    } 
+                break;      
+            }
+            case '/autenticar':
+                switch ($method) {
+                    case 'POST': //Parametros por el body del usuario
+            
+                        $response = new Response();
+            
+                        $rtaJason = Token::comprobarToken();       
+                        $response->data = $rtaJason;
+                        //print_r($rtaJason);
+                        $correo = $rtaJason->email;
+                        $clave =  $rtaJason->clave;
+                        /* print_r($correo);
+                        print_r("<br>");
+                        print_r($clave);
+                        print_r("<br>"); */
+                        if ($response->data == "Wrong number of segments Error JWT"){
+                            $response->status = 'fail';
+                        }    
+                        echo json_encode($response);
+                        } 
+                    break;      
+    break;
+
+    case '/auto':
+        switch ($method) {
+            case 'GET':
+                    
+                    $response = new Response();            //instancioamos la clase 
+                    
+                    // Leer TXT
+                    echo "TXT";
+                    echo "<br>";
+                    echo "Leo solo las patantes";
+                    echo "<br>";
+                    $rta = Datos::leerTxt($fileTxt);
+
+                    foreach ($rta as $value) {
+                        echo $value->_patente;
+                        echo "<br>";
+                    }
+                    echo "<br>"; 
+                    echo "---------------------------------------";
+                    echo "<br>"; 
+
+                    //Leer Serializacion un auto o un dato
+                    echo "Serialización";
+                    echo "<br>";
+                    $bandera = false;
+                    $datoBuscar = $_GET['buscar']??'';
+                    $arrayDatosSrializazos=Datos::leerSerialize("$fileSerialize");
+                    if (strlen($datoBuscar)>5 && strlen($datoBuscar)<8) {
+                        foreach ($arrayDatosSrializazos as $value) {
+                            if($value->_patente==$datoBuscar){
+                                echo "Se encontró: ";
+                                //var_dump($value);
+                                echo $value->_patente." color: ".$value->_color." marca: ".$value->_marca." fecha: ".$value->_fecha;
+                                $bandera=true;
+                            }
+                        }
+                    }
+                    echo "<br>";
+                    echo "Todos";
+                    echo "<br>";
+                    foreach ($arrayDatosSrializazos as $value) {
+                            echo $value->_patente." color: ".$value->_color." marca: ".$value->_marca." fecha: ".$value->_fecha."<br>";
+                    }
+
+                    if($bandera==false){
+                        echo "No se encontró ningún dato buscado.";
+                    }
+
+                    // Leer Jason            
+                    
+                    $arrayJason=Datos::leerJSON($fileJson);
+                    $ListaDatos = array();
+                                
+                    foreach ($arrayJason as $value) {
+                        array_push($ListaDatos,$value);
+                    }
+                    echo "<br>";
+                    echo "----------------------";
+                    echo "<br>";
+                   
+                    $response->data = $ListaDatos;
+                    echo json_encode($response);
+
+                break;
+            case 'POST': //Parametros por el body
+                    $patente = $_POST['patente']?? '';
+                    $marca = $_POST['marca']?? '';
+                    $color = $_POST['color']?? '';
+                    $precio = $_POST['precio']?? 0;
+                    $fecha = $_POST['fecha']?? '';
+                    $archivo = $_FILES['archivo']?? '';
+
+                    $response = new Response();
+
+                    if (isset($patente) && isset($marca) && isset($color) && isset($precio) && isset($fecha) && isset($archivo)) {
+                        $datos = new Auto($patente, $marca, $color, $precio,$fecha);
+                       
+                        //TxT
+                        $rtatxt = Datos::guardarTxt($fileTxt, $datos);
+
+                        //Serialize
+                        $rta = Datos::guardarSerialize($fileSerialize,$datos);
+                        //$response->data = 'Guardado los Datos';
+                        //echo($response);
+
+                        //Json
+                        //Imagen
+                        $imagenSubida = Datos::tratarArchivo($archivo,$patente);
+                        //echo $imagenSubida;
+
+                        $rtaJason = Datos::guardarJSON($fileJson,$datos);
+                        $response->data = "Se Grabo Usuario";
+                        echo json_encode($response); 
+                        
+                    }
+                    else{
+                        $response->data = 'Faltan datos'; //se usa en el lugar que hubo una falla
+                        $response->status = 'fail'; // falla
+                        echo json_encode($response);
+                    }   
+                break;
+                
+            default:
+                # code...
+                echo 'Metodo erroneo';
+                break;
+        }
+    break;

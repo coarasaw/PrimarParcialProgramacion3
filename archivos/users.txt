@@ -1,0 +1,1 @@
+[{"correo":"admin@mail.com","tipo":"admin","clave":"b93ff840821c58301fc136f3c885fa1d92eb7d84","fotoNombre":"admin1601417137.jpg"},{"correo":"corral@mail.com","tipo":"user","clave":"4aa2fa93f041d011410cc1892451939cf65d2c14","fotoNombre":"corral1601417234.jpg"}]
